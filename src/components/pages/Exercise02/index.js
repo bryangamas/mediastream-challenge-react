@@ -12,98 +12,36 @@
  * You can modify all the code, this component isn't well designed intentionally. You can redesign it as you need.
  */
 
+import { useMovies } from "../../../hooks/useMovies";
+import MovieLibraryList from "../../library/MovieLibraryList";
+import Search from "../../library/Search";
 import "./assets/styles.css";
-import { useEffect, useState } from "react";
-import { API_BASE } from "../../../contants";
-import { orderMovies } from "../../../utils/movieLibrearyUtils";
 
 export default function Exercise02() {
-  const [movies, setMovies] = useState([]);
-  const [genres, setGenres] = useState([]);
-  const [fetchCount, setFetchCount] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const [selectedGenre, setSelectedGenre] = useState("");
-  const [order, setOrder] = useState(1);
-
-  useEffect(() => {
-    const handleGenreFetch = () => {
-      setLoading(true);
-      console.log("Getting genres");
-      fetch(`${API_BASE}/genres`)
-        .then((res) => res.json())
-        .then((json) => {
-          setGenres(json);
-          setLoading(false);
-        })
-        .catch(() => {
-          console.log("Run yarn movie-api for fake api");
-        });
-    };
-    handleGenreFetch();
-  }, []);
-
-  useEffect(() => {
-    const handleMovieFetch = () => {
-      setLoading(true);
-      setFetchCount((prevCount) => prevCount + 1);
-      fetch(
-        `${API_BASE}/movies?_limit=50&genres_like=${selectedGenre}&_sort=year&_order=${
-          order > 0 ? "asc" : "desc"
-        }`
-      )
-        .then((res) => res.json())
-        .then((json) => {
-          setMovies(orderMovies(json, order));
-          setLoading(false);
-        })
-        .catch(() => {
-          console.log("Run yarn movie-api for fake api");
-        });
-    };
-    handleMovieFetch();
-  }, [selectedGenre, order]);
+  const {
+    genres,
+    movies,
+    fetchCount,
+    order,
+    setSelectedGenre,
+    toggleOrder,
+    loading,
+  } = useMovies();
 
   return (
     <section className="movie-library">
       <h1 className="movie-library__title">Movie Library</h1>
-      <div className="movie-library__actions">
-        <select
-          name="genre"
-          placeholder="Search by genre..."
-          onChange={(e) => setSelectedGenre(e.target.value)}
-        >
-          <option value="">All</option>
-          {genres.map((item) => (
-            <option key={item} value={item}>
-              {item}
-            </option>
-          ))}
-        </select>
-        <button onClick={() => setOrder(order * -1)}>
-          Order {order > 0 ? "Descending" : "Ascending"}
-        </button>
-      </div>
-      {loading ? (
-        <div className="movie-library__loading">
-          <p>Loading...</p>
-          <p>Fetched {fetchCount} times</p>
-        </div>
-      ) : (
-        <ul className="movie-library__list">
-          {movies.map((movie) => (
-            <li key={movie.id} className="movie-library__card">
-              <img src={movie.posterUrl} alt={movie.title} />
-              <ul>
-                <li>ID: {movie.id}</li>
-                <li>Title: {movie.title}</li>
-                <li>Year: {movie.year}</li>
-                <li>Runtime: {movie.runtime}</li>
-                <li>Genres: {movie.genres.join(", ")}</li>
-              </ul>
-            </li>
-          ))}
-        </ul>
-      )}
+      <Search
+        genres={genres}
+        order={order}
+        onChangeGenre={setSelectedGenre}
+        onChangeOrder={toggleOrder}
+      />
+      <MovieLibraryList
+        movies={movies}
+        fetchCount={fetchCount}
+        loading={loading}
+      />
     </section>
   );
 }
