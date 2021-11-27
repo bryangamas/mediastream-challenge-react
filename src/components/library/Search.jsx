@@ -16,7 +16,7 @@ const Search = ({ genres, onChangeGenre, order, onChangeOrder }) => {
         ))}
       </select>
       <button onClick={onChangeOrder}>
-        Order {order > 0 ? "Descending" : "Ascending"}
+        Year {order > 0 ? "Descending" : "Ascending"}
       </button>
     </div>
   );

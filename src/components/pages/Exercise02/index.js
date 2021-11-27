@@ -13,6 +13,7 @@
  */
 
 import { useMovies } from "../../../hooks/useMovies";
+import LibraryBanner from "../../library/LibraryBanner";
 import MovieLibraryList from "../../library/MovieLibraryList";
 import Search from "../../library/Search";
 import "./assets/styles.css";
@@ -29,19 +30,22 @@ export default function Exercise02() {
   } = useMovies();
 
   return (
-    <section className="movie-library">
-      <h1 className="movie-library__title">Movie Library</h1>
-      <Search
-        genres={genres}
-        order={order}
-        onChangeGenre={setSelectedGenre}
-        onChangeOrder={toggleOrder}
-      />
-      <MovieLibraryList
-        movies={movies}
-        fetchCount={fetchCount}
-        loading={loading}
-      />
+    <section className="movie-library__container">
+      <LibraryBanner />
+      <div className="movie-library">
+        <h1 className="movie-library__title">Movie Library</h1>
+        <Search
+          genres={genres}
+          order={order}
+          onChangeGenre={setSelectedGenre}
+          onChangeOrder={toggleOrder}
+        />
+        <MovieLibraryList
+          movies={movies}
+          fetchCount={fetchCount}
+          loading={loading}
+        />
+      </div>
     </section>
   );
 }

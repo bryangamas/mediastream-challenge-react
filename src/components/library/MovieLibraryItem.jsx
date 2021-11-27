@@ -3,13 +3,18 @@ import React from "react";
 const MovieLibraryItem = ({ movie }) => {
   return (
     <li className="movie-library__card">
-      <img src={movie.posterUrl} alt={movie.title} />
+      <img
+        src={movie.posterUrl}
+        alt={movie.title}
+        onError={(e) => {
+          e.target.onerror = null;
+          e.target.src = "/images/default-movie-image.png";
+        }}
+      />
       <ul>
-        <li>ID: {movie.id}</li>
-        <li>Title: {movie.title}</li>
-        <li>Year: {movie.year}</li>
-        <li>Runtime: {movie.runtime}</li>
-        <li>Genres: {movie.genres.join(", ")}</li>
+        <li className="movie-library__card-title">{movie.title}</li>
+        <li>{movie.genres.join(", ")}</li>
+        <li>{movie.year}</li>
       </ul>
     </li>
   );
