@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { API_BASE } from "../contants";
+import { API_BASE } from "../constants";
 
 export const useMovies = () => {
   const [movies, setMovies] = useState([]);
